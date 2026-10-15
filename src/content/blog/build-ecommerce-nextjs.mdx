@@ -1,0 +1,59 @@
+---
+title: "Building a Production-Ready E-Commerce Site with Next.js"
+description: "How I built a modern e-commerce platform using Next.js, Stripe, and Tailwind CSS — from product catalog to checkout."
+date: "2024-12-20"
+readTime: "9 min read"
+category: "Next.js"
+---
+
+## The Goal
+
+I wanted to build an e-commerce site that felt as smooth as Vercel's website. Here's how I did it.
+
+## Why Next.js?
+
+- **Server-side rendering** for SEO
+- **Image optimization** out of the box
+- **API routes** for backend logic
+- **File-based routing** for clean URLs
+
+## The Architecture
+
+- **Frontend** — Next.js App Router
+- **Styling** — Tailwind CSS
+- **Payments** — Stripe
+- **Database** — PostgreSQL with Prisma
+- **Auth** — NextAuth.js
+
+## Key Features
+
+- Product catalog with filters and search
+- Cart with localStorage persistence
+- Checkout with Stripe
+- Order confirmation emails
+- Admin dashboard for products
+
+## The Tricky Part: Stripe Integration
+
+Stripe is powerful but has a steep learning curve. Here's my flow:
+
+1. User clicks "Checkout"
+2. Backend creates a Stripe session
+3. User is redirected to Stripe Checkout
+4. On success, Stripe webhook fires
+5. Order is saved to database
+
+```typescript
+const session = await stripe.checkout.sessions.create({
+  line_items: items.map(item => ({
+    price_data: {
+      currency: 'usd',
+      product_data: { name: item.name },
+      unit_amount: item.price * 100,
+    },
+    quantity: item.quantity,
+  })),
+  mode: 'payment',
+  success_url: `${process.env.NEXT_PUBLIC_URL}/success`,
+  cancel_url: `${process.env.NEXT_PUBLIC_URL}/cart`,
+});

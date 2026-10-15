@@ -1,0 +1,65 @@
+---
+title: "How I Built a Hospital Management System with MERN Stack"
+description: "A deep dive into building a full-stack hospital management system using MongoDB, Express, React, and Node.js — including the challenges I faced and the lessons I learned."
+date: "2025-01-15"
+readTime: "8 min read"
+category: "Full-Stack"
+---
+
+## Why I Built This
+
+When I started building a hospital management system, I thought it would take two weeks. It took two months — and taught me more than any tutorial ever could.
+
+Hospitals need to manage patient admissions, doctor schedules, medical records, billing, and pharmacy inventory — all in real time, all securely. This is the story of how I built it.
+
+## The Tech Stack
+
+I chose the MERN stack for a few reasons:
+
+- **MongoDB** — flexible schema for complex medical data
+- **Express** — lightweight and fast backend framework
+- **React** — component-based UI for complex dashboards
+- **Node.js** — one language across the entire stack
+
+## Architecture Overview
+
+The system uses a classic three-tier architecture:
+
+1. **Frontend** — React with role-based dashboards
+2. **Backend** — Express REST API with JWT authentication
+3. **Database** — MongoDB with Mongoose schemas
+
+## Key Features
+
+- **Role-Based Access Control** — Admins, doctors, nurses, and receptionists each see different dashboards
+- **Real-Time Updates** — Socket.io for live patient status
+- **Secure Authentication** — JWT tokens with refresh rotation
+- **Billing System** — automated invoice generation
+- **Pharmacy Inventory** — stock alerts and expiry tracking
+
+## Challenges I Faced
+
+### Challenge 1: Data Relationships
+
+Medical data is highly relational. A patient has appointments, prescriptions, lab results — all connected. I had to design a schema that was both flexible and consistent.
+
+**Solution:** I used MongoDB's `populate()` feature and designed clear relationships between collections.
+
+### Challenge 2: Performance
+
+With thousands of records, queries became slow. Loading patient history took over 3 seconds.
+
+**Solution:** I added indexes on frequently queried fields and used pagination for long lists.
+
+## Lessons Learned
+
+1. **Plan your schema first.** Bad schema design haunts you forever.
+2. **Write tests early.** Even a few integration tests saved me hours.
+3. **Talk to real users.** Doctors gave me feedback that completely changed the UI.
+4. **Security is not optional.** Medical data needs encryption and audit logs.
+
+## Conclusion
+
+Building this system made me a better full-stack developer. If you're starting a similar project, start small, iterate fast, and always test with real users.
+
+You can find the code on my [GitHub](https://github.com/dawit708/clinical-management-system-for-backend-with-frontend).

@@ -1,0 +1,20 @@
+---
+title: "10 Tips for Writing Clean TypeScript Code"
+description: "Practical tips to make your TypeScript code cleaner, safer, and easier to maintain — from a developer who learned them the hard way."
+date: "2025-01-10"
+readTime: "6 min read"
+category: "TypeScript"
+---
+
+## Why Clean Code Matters
+
+TypeScript gives us superpowers — but only if we use it well. After writing TypeScript for 3 years, here are the 10 tips I follow daily.
+
+## 1. Avoid `any` Like the Plague
+
+```typescript
+// Bad — you lose all type safety
+function process(data: any) { ... }
+
+// Good — the compiler helps you
+function process(data: User[]) { ... }
