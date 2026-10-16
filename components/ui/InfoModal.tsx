@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
+import React, { useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { X } from "lucide-react";
 
 interface InfoModalProps {
   isOpen: boolean;
@@ -28,22 +28,22 @@ export const InfoModal: React.FC<InfoModalProps> = ({
   // Lock body scroll when modal is open
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     }
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     };
   }, [isOpen]);
 
   // Close on ESC key
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    window.addEventListener('keydown', handleEsc);
-    return () => window.removeEventListener('keydown', handleEsc);
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
   }, [onClose]);
 
   return (
@@ -66,11 +66,13 @@ export const InfoModal: React.FC<InfoModalProps> = ({
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
               className="relative w-full max-w-lg bg-[var(--card)] border border-[var(--border)] rounded-3xl overflow-hidden pointer-events-auto max-h-[90vh] overflow-y-auto"
             >
               {/* Gradient Header */}
-              <div className={`relative h-32 bg-gradient-to-br ${gradient} flex items-center justify-center`}>
+              <div
+                className={`relative h-32 bg-gradient-to-br ${gradient} flex items-center justify-center`}
+              >
                 {/* Decorative circles */}
                 <div className="absolute top-4 left-6 w-16 h-16 rounded-full bg-white/10 blur-xl" />
                 <div className="absolute bottom-4 right-8 w-20 h-20 rounded-full bg-white/10 blur-xl" />
@@ -79,7 +81,7 @@ export const InfoModal: React.FC<InfoModalProps> = ({
                 <motion.div
                   initial={{ scale: 0, rotate: -180 }}
                   animate={{ scale: 1, rotate: 0 }}
-                  transition={{ delay: 0.15, type: 'spring', stiffness: 200 }}
+                  transition={{ delay: 0.15, type: "spring", stiffness: 200 }}
                   className="relative w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white shadow-2xl"
                 >
                   {icon}
@@ -88,7 +90,7 @@ export const InfoModal: React.FC<InfoModalProps> = ({
                 {/* Close Button */}
                 <button
                   onClick={onClose}
-                  className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/30 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/50 transition-colors"
+                  className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/30 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/50 transition-colors cursor-pointer"
                   aria-label="Close modal"
                 >
                   <X size={18} />
@@ -125,7 +127,9 @@ export const InfoModal: React.FC<InfoModalProps> = ({
                       transition={{ delay: 0.3 + index * 0.08 }}
                       className="flex items-start gap-3 text-gray-300"
                     >
-                      <span className={`w-1.5 h-1.5 rounded-full bg-gradient-to-r ${gradient} mt-2 flex-shrink-0`} />
+                      <span
+                        className={`w-1.5 h-1.5 rounded-full bg-gradient-to-r ${gradient} mt-2 flex-shrink-0`}
+                      />
                       <span className="text-sm leading-relaxed">{detail}</span>
                     </motion.div>
                   ))}
@@ -134,7 +138,7 @@ export const InfoModal: React.FC<InfoModalProps> = ({
                 {/* CTA Button */}
                 <button
                   onClick={onClose}
-                  className={`w-full py-3.5 rounded-xl font-semibold text-white bg-gradient-to-r ${gradient} hover:opacity-90 transition-opacity shadow-lg`}
+                  className={`w-full py-3.5 rounded-xl font-semibold text-white bg-gradient-to-r ${gradient} hover:opacity-90 transition-opacity shadow-lg cursor-pointer`}
                 >
                   Got it
                 </button>

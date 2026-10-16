@@ -70,7 +70,7 @@ export const Testimonials = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       paginate(1);
-    }, 2000);
+    }, 6000);
     return () => clearInterval(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index]);
@@ -144,7 +144,7 @@ export const Testimonials = () => {
                 opacity: { duration: 0.3 },
                 scale: { duration: 0.3 },
               }}
-              className={`absolute inset-0 bg-[#0d0d16] border border-[#1f2937] rounded-3xl p-8 md:p-12 overflow-hidden`}
+              className="absolute inset-0 bg-[#0d0d16] border border-[#1f2937] rounded-3xl p-8 md:p-12 overflow-hidden"
             >
               {/* Background glow */}
               <div

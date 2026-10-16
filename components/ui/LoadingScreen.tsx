@@ -54,7 +54,7 @@ export const LoadingScreen = () => {
         <motion.div
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] as const }}
           className="fixed inset-0 z-[9999] bg-[#0a0a12] flex items-center justify-center overflow-hidden"
         >
           {/* Ambient Gradient Orbs */}
@@ -141,7 +141,7 @@ export const LoadingScreen = () => {
                 }}
               />
 
-              {/* ===== YOUR PHOTO in the center ===== */}
+              {/* YOUR PHOTO in the center */}
               <div className="absolute inset-6 rounded-full overflow-hidden border-2 border-indigo-500/30 shadow-2xl shadow-indigo-500/40">
                 <motion.img
                   src="/about.jpg"
@@ -151,14 +151,13 @@ export const LoadingScreen = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{
                     duration: 1.2,
-                    ease: [0.34, 1.56, 0.64, 1],
+                    ease: [0.34, 1.56, 0.64, 1] as const,
                   }}
                 />
-                {/* Subtle inner gradient for depth */}
                 <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/30 via-transparent to-transparent" />
               </div>
 
-              {/* Pulsing glow ring around photo */}
+              {/* Pulsing glow ring */}
               <motion.div
                 className="absolute inset-0 rounded-full border border-indigo-400/40"
                 animate={{

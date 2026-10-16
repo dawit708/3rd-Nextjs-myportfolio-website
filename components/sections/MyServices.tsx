@@ -115,11 +115,11 @@ export const MyServices = () => {
             initial={{ opacity: 0, y: 40, scale: 0.95 }}
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, margin: '-50px' }}
-            transition={{
-              duration: 0.6,
-              delay: index * 0.08,
-              ease: [0.34, 1.56, 0.64, 1],
-            }}
+           transition={{
+            duration: 0.6,
+            delay: index * 0.08,
+            ease: [0.34, 1.56, 0.64, 1] as const,
+                   }}
             whileHover={{ y: -6 }}
             className="group relative bg-[var(--card)]/60 backdrop-blur-sm border border-[var(--border)] rounded-3xl p-8 overflow-hidden hover:border-amber-300/40 transition-all duration-300"
           >
