@@ -30,6 +30,18 @@ const projectsData = [
     githubLink: "https://github.com/dawit708/clinical-management-system-for-backend-with-frontend.git",
     demoLink: "#",
   },
+   {
+    category: "Full-Stack · MERN",
+    title: "student portal management system",
+    description: "Comprehensive student portal system with course registration, grade tracking, and communication.",
+    image: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=1000",
+    stackImage: "https://upload.wikimedia.org/wikipedia/commons/9/94/MERN-logo.png",
+    stackLabel: "MERN Stack",
+    tags: ["MongoDB", "Express", "Next.js", "Nest.js"],
+    gradient: "from-teal-500 to-cyan-800",
+    githubLink: "https://github.com/dawit708/type-script-project-for-Student-Enrollement.git",
+    demoLink: "#",
+  },
   {
     category: "Web App · Next.js",
     title: "E-Commerce Website",
@@ -114,18 +126,7 @@ const projectsData = [
     githubLink: "https://github.com/dawit708/fullsatack-project-for-Employee-mangment-systems",
     demoLink: "#",
   },
-  {
-    category: "UI Clone · React",
-    title: "Apple Calculator",
-    description: "Pixel-perfect recreation of the Apple Calculator with smooth animations.",
-    image: "https://images.unsplash.com/photo-1587145820266-a5951ee6f620?q=80&w=1000",
-    stackImage: "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg",
-    stackLabel: "React",
-    tags: ["React", "CSS", "Vite"],
-    gradient: "from-emerald-500 to-teal-700",
-    githubLink: "https://github.com/dawit708/apple-calculater",
-    demoLink: "https://calculter1.netlify.app",
-  },
+
   {
     category: "Game · React",
     title: "Snake Game",
