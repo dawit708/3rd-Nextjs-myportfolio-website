@@ -173,7 +173,7 @@ export const Hero = () => {
 
           <MagneticButton>
             <a
-              href="/cv.pdf"
+              href="/CV.pdf"
               download="Dawit_Tsegie_CV.pdf"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium bg-[var(--card)] text-white border border-[var(--border)] hover:bg-[var(--background)] transition-colors cursor-pointer"
             >

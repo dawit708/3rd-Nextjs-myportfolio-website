@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import { motion } from "framer-motion";
 import {
@@ -161,7 +160,7 @@ export const Journey = () => {
         </motion.p>
 
         <motion.a
-          href="/cv.pdf"
+          href="/CV.pdf"
           download="Dawit_Tsegie_CV.pdf"
           whileHover={{ scale: 1.05, y: -2 }}
           whileTap={{ scale: 0.98 }}

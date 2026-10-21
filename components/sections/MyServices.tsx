@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Code2, Smartphone, PenTool, Clock, Rocket, Headphones, ArrowRight } from 'lucide-react';
