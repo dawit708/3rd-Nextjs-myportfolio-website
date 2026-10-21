@@ -6,7 +6,7 @@ import { motion, useInView } from 'framer-motion';
 // ====== STATS DATA (with optional links) ======
 const statsData = [
   { 
-    value: 50, 
+    value: 30, 
     suffix: '+', 
     label: 'Projects', 
    link: 'https://github.com/dawit708'
@@ -15,7 +15,7 @@ const statsData = [
     value: 3, 
     suffix: '+', 
     label: 'Clients', 
-    link: 'https://dawittsigie.onrender.com/' 
+    link: 'https://dejeneanimalclinic.vercel.app/' 
   },
   { 
     value: 2, 
@@ -26,7 +26,7 @@ const statsData = [
   { 
     value: 4, 
     suffix: '', 
-    label: 'Awards', 
+    label: 'certificates', 
     link: 'https://drive.google.com/file/d/1TuNwkyJQfN1yUW1iLEEnbyUJk3jDnkmH/view?usp=sharing' 
   },
 ];

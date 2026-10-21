@@ -9,27 +9,27 @@ const toolkitCategories = [
   {
     title: 'Frontend',
     items: [
-      { icon: 'HTML', label: 'HTML / CSS', color: 'text-orange-400 bg-orange-400/10', level: 95 },
-      { icon: 'JS', label: 'JavaScript', color: 'text-yellow-400 bg-yellow-400/10', level: 90 },
-      { icon: '⚛', label: 'React.js', color: 'text-cyan-400 bg-cyan-400/10', level: 92 },
-      { icon: 'N', label: 'Next.js', color: 'text-white bg-white/10', level: 88 },
-      { icon: 'TS', label: 'TypeScript', color: 'text-blue-400 bg-blue-400/10', level: 85 },
+      { icon: 'HTML', label: 'HTML / CSS', color: 'text-orange-400 bg-orange-400/10', level: 76 },
+      { icon: 'JS', label: 'JavaScript', color: 'text-yellow-400 bg-yellow-400/10', level: 71 },
+      { icon: '⚛', label: 'React.js', color: 'text-cyan-400 bg-cyan-400/10', level: 75 },
+      { icon: 'N', label: 'Next.js', color: 'text-white bg-white/10', level: 70 },
+      { icon: 'TS', label: 'TypeScript', color: 'text-blue-400 bg-blue-400/10', level: 71 },
     ],
   },
   {
     title: 'Backend',
     items: [
-      { icon: 'JS', label: 'Node.js', color: 'text-green-400 bg-green-400/10', level: 88 },
-      { icon: 'EX', label: 'Express.js', color: 'text-gray-300 bg-gray-300/10', level: 85 },
-      { icon: 'NST', label: 'Nest.js', color: 'text-red-400 bg-red-400/10', level: 80 },
-      { icon: 'PY', label: 'Python', color: 'text-blue-300 bg-blue-300/10', level: 82 },
-      { icon: 'PHP', label: 'PHP', color: 'text-indigo-400 bg-indigo-400/10', level: 80 },
+      { icon: 'JS', label: 'Node.js', color: 'text-green-400 bg-green-400/10', level: 71 },
+      { icon: 'EX', label: 'Express.js', color: 'text-gray-300 bg-gray-300/10', level: 72 },
+      { icon: 'NST', label: 'Nest.js', color: 'text-red-400 bg-red-400/10', level: 70 },
+      { icon: 'PY', label: 'Python', color: 'text-blue-300 bg-blue-300/10', level: 65 },
+      { icon: 'PHP', label: 'PHP', color: 'text-indigo-400 bg-indigo-400/10', level: 70 },
     ],
   },
   {
     title: 'Database',
     items: [
-      { icon: 'PG', label: 'PostgreSQL', color: 'text-sky-400 bg-sky-400/10', level: 88 },
+      { icon: 'PG', label: 'PostgreSQL', color: 'text-sky-400 bg-sky-400/10', level: 80 },
       { icon: 'MY', label: 'MySQL', color: 'text-blue-500 bg-blue-500/10', level: 85 },
       { icon: 'MG', label: 'MongoDB', color: 'text-green-500 bg-green-500/10', level: 82 },
       { icon: 'RD', label: 'Redis', color: 'text-red-500 bg-red-500/10', level: 80 },
@@ -62,7 +62,6 @@ const categoryCardVariants = {
     opacity: 1,
     y: 0,
     scale: 1,
-    //transition: { duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }
     transition: { duration: 0.6, ease: [0.34, 1.56, 0.64, 1] as const }
   }
 };
@@ -105,14 +104,14 @@ export const About = () => {
               Hi, I'm Dawit Tsigie
             </h2>
             <p className="text-base md:text-lg font-medium bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-              Full Stack Web Developer based in Injibara, Ethiopia.
+              junior fullsatck Web Developer student based in Injibara, Ethiopia.
             </p>
           </motion.div>
 
           {/* Bio paragraphs - smaller, refined typography */}
           <motion.div variants={itemVariants} className="space-y-4 text-gray-400 leading-relaxed text-sm md:text-base">
             <p>
-              I'm a passionate Full Stack Web Developer dedicated to crafting modern,
+              I'm a passionate junior fullstack Web Developer student dedicated to crafting modern,
               high-performance web experiences. With several years of professional
               experience, I specialize in building responsive, user-friendly applications
               that meet the latest industry standards.

@@ -12,19 +12,19 @@ import {
 
 const experienceData = [
   {
-    year: "2025 — Present",
-    role: "Full-Stack Developer",
-    company: "Freelance & Independent Practice",
+    year: "2025 ",
+    role: "junior web Developer student",
+    company: "Freelance ",
     location: "Addis Ababa, Ethiopia",
     points: [
-      "Built and deployed 12+ production web applications using React, Next.js, and TypeScript.",
+      "Built  12+ production web applications using React, Next.js, and TypeScript.",
       "Designed REST APIs, relational data models, and automated CI/CD deployment workflows.",
       "Collaborated with local businesses and founders on product discovery and delivery.",
     ],
   },
   {
     year: "2026",
-    role: "Full-Stack Developer (Contract)",
+    role: "Full-Stack web Developer student ",
     company: "Dejene Animal Clinic",
     location: "Remote · Contract",
     points: [
@@ -35,18 +35,18 @@ const experienceData = [
   },
   {
     year: "2024",
-    role: "Frontend Developer",
+    role: "i am learning web development for backend",
     company: "Open Source & Self-Taught Projects",
     location: "Addis Ababa, Ethiopia",
     points: [
-      "Developed 20+ GitHub projects including Netflix Clone, YouTube Clone, Weather App, and Snake Game.",
+      "Developed 10+ GitHub projects including Netflix Clone, YouTube Clone, Weather App, and Snake Game.",
       "Mastered modern tooling: Vite, Tailwind CSS, Framer Motion, and REST API integration.",
       "Collaborated with other developers through GitHub pull requests and code reviews.",
     ],
   },
   {
-    year: "2026",
-    role: "Junior Web Developer",
+    year: "2023",
+    role: "i am learning web development for frontend",
     company: "Personal & Academic Projects",
     location: "Addis Ababa, Ethiopia",
     points: [
@@ -60,30 +60,27 @@ const experienceData = [
 const educationData = [
   {
     icon: <GraduationCap size={22} />,
-    title: "Bsc, Software Engineering",
+    title: " Software Engineering Student",
     institution: "Injibara University",
-    year: "2022 — Present",
-    gradient: "from-emerald-500 to-teal-600",
+    year: "2023 — Present"
   },
   {
     icon: <Award size={22} />,
     title: "Full-Stack Web Development",
     institution: "Evangadi Bootcamp & Online Training",
-    year: "2023 · Professional Certification",
-    gradient: "from-indigo-500 to-purple-600",
+    year: "2024 · Professional Certification",
   },
   {
     icon: <Sparkles size={22} />,
-    title: "Cloud Architecture Foundations",
-    institution: "Professional Learning Program",
-    year: "2024 · Certification",
-    gradient: "from-cyan-500 to-blue-600",
+    title: "Problem solving",
+    institution: "injibara universty",
+    year: "2025 · Certification"
   },
   {
     icon: <Briefcase size={22} />,
     title: "Flutter Mobile Development",
     institution: "Self-Paced Learning & Projects",
-    year: "2025 · Ongoing",
+    year: "2026 · Ongoing",
     gradient: "from-purple-500 to-pink-600",
   },
 ];

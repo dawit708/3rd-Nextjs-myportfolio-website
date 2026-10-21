@@ -3,11 +3,10 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Moon, Sun, ArrowUpRight, Menu, X } from "lucide-react";
+import { ArrowUpRight, Menu, X } from "lucide-react"; // Removed Moon and Sun
 import { scrollToSection } from "@/lib/utils";
 
 export const Navbar = () => {
-  const [isLight, setIsLight] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
@@ -15,12 +14,6 @@ export const Navbar = () => {
 
   // ===== Track scroll, active section, and progress =====
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "light") {
-      setIsLight(true);
-      document.documentElement.classList.add("light");
-    }
-
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
 
@@ -67,19 +60,6 @@ export const Navbar = () => {
     };
   }, [mobileMenuOpen]);
 
-  const toggleTheme = () => {
-    const newTheme = !isLight;
-    setIsLight(newTheme);
-
-    if (newTheme) {
-      document.documentElement.classList.add("light");
-      localStorage.setItem("theme", "light");
-    } else {
-      document.documentElement.classList.remove("light");
-      localStorage.setItem("theme", "dark");
-    }
-  };
-
   // ===== Navigation Items =====
   const navItems = [
     { label: "Home", id: "home", type: "scroll" as const },
@@ -101,7 +81,7 @@ export const Navbar = () => {
       <nav
         className={`fixed top-0 w-full z-50 transition-all duration-500 ${
           scrolled
-            ? "bg-[#0a0a12]/85 backdrop-blur-xl border-b border-[#1f2937] shadow-lg shadow-black/20"
+            ? "bg-[var(--background)]/85 backdrop-blur-xl border-b border-[var(--card-border)] shadow-lg shadow-black/20"
             : "bg-transparent"
         }`}
       >
@@ -116,7 +96,6 @@ export const Navbar = () => {
 
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           {/* ===== Logo ===== */}
-                    {/* ===== Logo — Amber outlined style ===== */}
           <Link
             href="/"
             className="flex items-center gap-3 shrink-0 group cursor-pointer"
@@ -130,7 +109,7 @@ export const Navbar = () => {
                 DT
               </span>
             </motion.div>
-            <span className="text-white font-mono text-lg whitespace-nowrap group-hover:text-amber-300 transition-colors">
+            <span className="text-[var(--foreground)] font-mono text-lg whitespace-nowrap group-hover:text-amber-300 transition-colors">
               dawit.tsgie
             </span>
           </Link>
@@ -145,7 +124,7 @@ export const Navbar = () => {
                   <Link
                     key={item.label}
                     href={item.id}
-                    className="relative px-4 py-2 rounded-lg font-medium text-gray-400 hover:text-white transition-all duration-300 group"
+                    className="relative px-4 py-2 rounded-lg font-medium text-gray-400 hover:text-[var(--foreground)] transition-all duration-300 group"
                   >
                     <span className="relative z-10">{item.label}</span>
                     <span className="absolute inset-0 rounded-lg bg-indigo-500/0 group-hover:bg-indigo-500/10 transition-all duration-300" />
@@ -159,8 +138,8 @@ export const Navbar = () => {
                   onClick={() => scrollToSection(item.id)}
                   className={`relative px-4 py-2 rounded-lg font-medium transition-all duration-300 group ${
                     isActive
-                      ? "text-white"
-                      : "text-gray-400 hover:text-white"
+                      ? "text-[var(--foreground)]"
+                      : "text-gray-400 hover:text-[var(--foreground)]"
                   }`}
                 >
                   <span className="relative z-10">{item.label}</span>
@@ -189,27 +168,6 @@ export const Navbar = () => {
 
           {/* ===== Right Actions ===== */}
           <div className="flex items-center gap-3">
-            {/* Theme Toggle */}
-            <motion.button
-              onClick={toggleTheme}
-              whileHover={{ scale: 1.05, rotate: 15 }}
-              whileTap={{ scale: 0.95 }}
-              className="w-10 h-10 rounded-full bg-[var(--card)] border border-[var(--border)] flex items-center justify-center text-gray-400 hover:text-[var(--foreground)] hover:border-indigo-500/40 transition-all cursor-pointer"
-              aria-label="Toggle theme"
-            >
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.div
-                  key={isLight ? "sun" : "moon"}
-                  initial={{ rotate: -90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: 90, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  {isLight ? <Sun size={18} /> : <Moon size={18} />}
-                </motion.div>
-              </AnimatePresence>
-            </motion.button>
-
             {/* Hire Me Button (Desktop only) */}
             <motion.button
               onClick={() => scrollToSection("contact")}
@@ -217,7 +175,7 @@ export const Navbar = () => {
               whileTap={{ scale: 0.97 }}
               className="hidden md:inline-flex items-center justify-center gap-2 h-10 px-5 text-sm rounded-lg font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/50 transition-all cursor-pointer group"
             >
-              Hire Me
+              
               <ArrowUpRight
                 size={16}
                 className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
@@ -227,7 +185,7 @@ export const Navbar = () => {
             {/* Mobile Hamburger */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden w-10 h-10 rounded-full bg-[var(--card)] border border-[var(--border)] flex items-center justify-center text-gray-400 hover:text-[var(--foreground)] transition-all cursor-pointer"
+              className="md:hidden w-10 h-10 rounded-full bg-[var(--card)] border border-[var(--card-border)] flex items-center justify-center text-gray-400 hover:text-[var(--foreground)] transition-all cursor-pointer"
               aria-label="Toggle menu"
             >
               <AnimatePresence mode="wait" initial={false}>
@@ -266,19 +224,19 @@ export const Navbar = () => {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 28, stiffness: 220 }}
-              className="fixed top-0 right-0 h-full w-[85%] max-w-sm bg-[#0a0a12] border-l border-[#1f2937] z-50 md:hidden overflow-y-auto flex flex-col"
+              className="fixed top-0 right-0 h-full w-[85%] max-w-sm bg-[var(--background)] border-l border-[var(--card-border)] z-50 md:hidden overflow-y-auto flex flex-col"
             >
               {/* Header */}
-              <div className="flex items-center justify-between p-6 border-b border-[#1f2937]">
+              <div className="flex items-center justify-between p-6 border-b border-[var(--card-border)]">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-indigo-500/30">
                     dt.
                   </div>
-                  <span className="text-white font-semibold">Menu</span>
+                  <span className="text-[var(--foreground)] font-semibold">Menu</span>
                 </div>
                 <button
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-9 h-9 rounded-full bg-[var(--card)] border border-[var(--border)] flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer"
+                  className="w-9 h-9 rounded-full bg-[var(--card)] border border-[var(--card-border)] flex items-center justify-center text-gray-400 hover:text-[var(--foreground)] transition-colors cursor-pointer"
                   aria-label="Close menu"
                 >
                   <X size={18} />
@@ -347,7 +305,7 @@ export const Navbar = () => {
               </div>
 
               {/* Bottom CTA */}
-              <div className="p-6 border-t border-[#1f2937]">
+              <div className="p-6 border-t border-[var(--card-border)]">
                 <button
                   onClick={() => handleNavClick("contact")}
                   className="w-full inline-flex items-center justify-center gap-2 py-4 rounded-xl font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:opacity-90 transition-opacity shadow-lg shadow-indigo-500/20 cursor-pointer"
@@ -366,13 +324,13 @@ export const Navbar = () => {
                 </div>
 
                 {/* Social Icons */}
-                <div className="h-px bg-[#1f2937] my-6" />
+                <div className="h-px bg-[var(--card-border)] my-6" />
                 <div className="flex items-center justify-center gap-3">
                   <a
                     href="https://github.com/dawit708"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-xl bg-[var(--card)] border border-[var(--border)] flex items-center justify-center text-gray-400 hover:text-white hover:bg-indigo-600 hover:border-indigo-600 transition-all cursor-pointer"
+                    className="w-10 h-10 rounded-xl bg-[var(--card)] border border-[var(--card-border)] flex items-center justify-center text-gray-400 hover:text-white hover:bg-indigo-600 hover:border-indigo-600 transition-all cursor-pointer"
                     aria-label="GitHub"
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -381,7 +339,7 @@ export const Navbar = () => {
                   </a>
                   <a
                     href="#"
-                    className="w-10 h-10 rounded-xl bg-[var(--card)] border border-[var(--border)] flex items-center justify-center text-gray-400 hover:text-white hover:bg-[#0a66c2] hover:border-[#0a66c2] transition-all cursor-pointer"
+                    className="w-10 h-10 rounded-xl bg-[var(--card)] border border-[var(--card-border)] flex items-center justify-center text-gray-400 hover:text-white hover:bg-[#0a66c2] hover:border-[#0a66c2] transition-all cursor-pointer"
                     aria-label="LinkedIn"
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -390,7 +348,7 @@ export const Navbar = () => {
                   </a>
                   <a
                     href="#"
-                    className="w-10 h-10 rounded-xl bg-[var(--card)] border border-[var(--border)] flex items-center justify-center text-gray-400 hover:text-white hover:bg-[#1da1f2] hover:border-[#1da1f2] transition-all cursor-pointer"
+                    className="w-10 h-10 rounded-xl bg-[var(--card)] border border-[var(--card-border)] flex items-center justify-center text-gray-400 hover:text-white hover:bg-[#1da1f2] hover:border-[#1da1f2] transition-all cursor-pointer"
                     aria-label="Twitter"
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
