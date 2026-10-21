@@ -12,10 +12,10 @@ const statsData = [
    link: 'https://github.com/dawit708'
   },
   { 
-    value: 10, 
+    value: 3, 
     suffix: '+', 
     label: 'Clients', 
-    link: 'https://dejeneanimalclinic.vercel.app/' 
+    link: 'https://dawittsigie.onrender.com/' 
   },
   { 
     value: 2, 
@@ -24,7 +24,7 @@ const statsData = [
     link: null 
   },
   { 
-    value: 5, 
+    value: 4, 
     suffix: '', 
     label: 'Awards', 
     link: 'https://drive.google.com/file/d/1TuNwkyJQfN1yUW1iLEEnbyUJk3jDnkmH/view?usp=sharing' 
