@@ -157,7 +157,7 @@ export const Journey = () => {
         </motion.p>
 
         <motion.a
-          href="/CV.pdf"
+           href="/CV.pdf"
           download="Dawit_Tsegie_CV.pdf"
           whileHover={{ scale: 1.05, y: -2 }}
           whileTap={{ scale: 0.98 }}

@@ -14,7 +14,7 @@ const projectsData = [
     tags: ["MongoDB", "Express", "React", "Node.js"],
     githubLink: "https://github.com/dawit708/fullstack-for-animal-clinical-managemnt-systems-for-backend-and-frontend.git",
     demoLink: "#",
-    year: "2024",
+    year: "2026",
   },
   {
     title: "Hospital Management System",
@@ -32,7 +32,43 @@ const projectsData = [
     tags: ["MongoDB", "Express", "Next.js", "Nest.js"],
     githubLink: "https://github.com/dawit708/type-script-project-for-Student-Enrollement.git",
     demoLink: "#",
+    year: "2026",
+  },
+   {
+    title: "Employee Management",
+    description: "A classic PHP & MySQL HR management portal. Features secure session management, comprehensive CRUD operations for employee records, and automated payroll report generation.",
+    image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200&auto=format&fit=crop",
+    tags: ["PHP", "MySQL", "Bootstrap"],
+    githubLink: "https://github.com/dawit708/fullsatack-project-for-Employee-mangment-systems",
+    demoLink: "#",
+    year: "2025",
+  },
+   {
+    title: "Evangadi Form Actions",
+    description: "A secure full-stack form submission engine. Implements Express middleware for rate-limiting, Joi schema validation for data integrity, and encrypted MongoDB data persistence.",
+    image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1200&auto=format&fit=crop",
+    tags: ["Node.js", "Express", "MongoDB"],
+    githubLink: "https://github.com/dawit708/Evangadi-backend-Form-action",
+    demoLink: "#",
     year: "2024",
+  },
+    {
+    title: "Gemini AI Clone",
+    description: "A full-stack AI chat application replicating the Google Gemini experience. Built with React.js and Express.js, it features real-time streaming text responses, multimodal file uploads (images, audio, PDFs), AI image generation (Imagen 3), and audio/music generation. The backend includes secure JWT authentication, a MySQL database for persistent chat history, and a custom usage-limiter middleware to enforce subscription tiers and daily limits.",
+    image: "https://images.unsplash.com/photo-1675271591211-126ad94e495d?q=80&w=1200&auto=format&fit=crop", // Modern AI abstract image
+    tags: ["React.js", "Express.js", "MySQL", "Gemini API", "Tailwind CSS", "JWT"],
+    githubLink: "https://github.com/dawit708/Gimini-clone-app.git",
+    demoLink: "#",
+    year: "2026",
+  },
+   {
+    title: "Enterprise Resource Planning",
+    description: "A comprehensive JavaFX desktop application for enterprise resource planning. Handles complex employee registrations, payroll generation, and MySQL database synchronization seamlessly.",
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1200&auto=format&fit=crop",
+    tags: ["Java", "JavaFX", "MySQL"],
+    githubLink: "https://github.com/dawit708/employee-registrations-systems-in-javafx",
+    demoLink: "#",
+    year: "2025",
   },
   {
     title: "E-Commerce Website",
@@ -70,33 +106,9 @@ const projectsData = [
     demoLink: "#",
     year: "2025",
   },
-  {
-    title: "Evangadi Form Actions",
-    description: "A secure full-stack form submission engine. Implements Express middleware for rate-limiting, Joi schema validation for data integrity, and encrypted MongoDB data persistence.",
-    image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1200&auto=format&fit=crop",
-    tags: ["Node.js", "Express", "MongoDB"],
-    githubLink: "https://github.com/dawit708/Evangadi-backend-Form-action",
-    demoLink: "#",
-    year: "2025",
-  },
-  {
-    title: "Enterprise Resource Planning",
-    description: "A comprehensive JavaFX desktop application for enterprise resource planning. Handles complex employee registrations, payroll generation, and MySQL database synchronization seamlessly.",
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1200&auto=format&fit=crop",
-    tags: ["Java", "JavaFX", "MySQL"],
-    githubLink: "https://github.com/dawit708/employee-registrations-systems-in-javafx",
-    demoLink: "#",
-    year: "2026",
-  },
-  {
-    title: "Employee Management",
-    description: "A classic PHP & MySQL HR management portal. Features secure session management, comprehensive CRUD operations for employee records, and automated payroll report generation.",
-    image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200&auto=format&fit=crop",
-    tags: ["PHP", "MySQL", "Bootstrap"],
-    githubLink: "https://github.com/dawit708/fullsatack-project-for-Employee-mangment-systems",
-    demoLink: "#",
-    year: "2026",
-  },
+ 
+ 
+ 
   {
     title: "Snake Game",
     description: "A modern take on the classic arcade game. Built entirely with HTML5 Canvas and React hooks, featuring smooth 60fps animations, progressive difficulty scaling, and local high-score storage.",
@@ -104,7 +116,7 @@ const projectsData = [
     tags: ["React", "Canvas", "Game Logic"],
     githubLink: "https://github.com/dawit708/LAST-GAME-PROJECT-IN-REACT.JS",
     demoLink: "https://effervescent-crisp-7a0e6.netlify.app/",
-    year: "2026",
+    year: "2024",
   },
   {
     title: "Apple Website Replica",
@@ -113,7 +125,7 @@ const projectsData = [
     tags: ["React", "Tailwind", "Framer Motion"],
     githubLink: "https://github.com/dawit708/API-key-for-apple-website.git",
     demoLink: "#",
-    year: "2026",
+    year: "2024",
   },
 ];
 

@@ -82,7 +82,7 @@ export const About = () => {
         <motion.div variants={imageVariants} className="flex-1 w-full max-w-md">
           <div className="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden border border-[var(--border)] bg-[var(--card)]">
             <img
-              src="/about.jpg"
+              src="/dev.jpg"
               alt="Dawit working at his desk"
               className="w-full h-full object-cover"
             />

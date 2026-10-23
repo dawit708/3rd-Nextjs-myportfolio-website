@@ -153,7 +153,7 @@ export const Hero = () => {
           variants={itemVariants}
           className="text-lg text-gray-500 max-w-xl leading-relaxed"
         >
-          I turn ambitious ideas into thoughtful digital products — from the
+          I turn ambitious ideas into thoughtful digital products from the
           first interface to the last API.
         </motion.p>
 
