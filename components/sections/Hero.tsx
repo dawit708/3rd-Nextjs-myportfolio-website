@@ -1,321 +1,488 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { ArrowUpRight, Download } from "lucide-react";
-import { FaGithub, FaLinkedin, FaTwitter, FaDribbble } from "react-icons/fa";
-import { AnimatedText } from "@/components/ui/AnimatedText";
-import { MagneticButton } from "@/components/ui/MagneticButton";
-import { scrollToSection } from "@/lib/utils";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  motion,
+  AnimatePresence,
+  useReducedMotion,
+  type Variants,
+} from "framer-motion";
+import { ArrowUpRight, ArrowDown, Download } from "lucide-react";
+import { FaGithub, FaLinkedin, FaXTwitter } from "react-icons/fa6";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15 },
-  },
-};
+/* ============================================================
+   Constants
+   ============================================================ */
+const EASE = [0.22, 1, 0.36, 1] as const;
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
-  },
-};
+type Role = { text: string; gradient: string };
 
-const terminalVariants = {
-  hidden: { opacity: 0, x: 50, scale: 0.95 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    scale: 1,
-    transition: { duration: 0.8, ease: "easeOut" },
-  },
-};
-
-interface TermLine {
-  type: "command" | "output" | "success";
-  prompt?: string;
-  command?: string;
-  output?: string;
-}
-
-const terminalLines: TermLine[] = [
-  { type: "command", prompt: "➜  ~", command: "whoami" },
-  { type: "output", output: "dawit.tsegei — full-stack developer" },
-  { type: "command", prompt: "➜  ~", command: "cat stack.txt" },
+const ROLES: Role[] = [
   {
-    type: "output",
-    output:
-      "TypeScript.js · React.js · Next.js · Node.js · Express · PostgreSQL",
+    text: "Full-stack Engineer",
+    gradient: "from-indigo-400 via-purple-400 to-pink-400",
   },
-  { type: "command", prompt: "➜  ~", command: "./status --experience" },
-  { type: "output", output: "3+ years · production systems · MERN" },
-  { type: "command", prompt: "➜  ~", command: "./availability.sh" },
-  { type: "success", output: "● open to new opportunities" },
+  {
+    text: "TypeScript Specialist",
+    gradient: "from-sky-400 via-blue-400 to-indigo-400",
+  },
+  {
+    text: "Product-minded Developer",
+    gradient: "from-amber-300 via-orange-400 to-rose-400",
+  },
 ];
 
-export const Hero = () => {
-  const [visibleLines, setVisibleLines] = useState(0);
-  const [currentText, setCurrentText] = useState("");
-  const [done, setDone] = useState(false);
+type TerminalEntry = {
+  prompt: string;
+  command: string;
+  output: React.ReactNode;
+  tone?: "success";
+};
+
+const TERMINAL: TerminalEntry[] = [
+  {
+    prompt: "~/dawit",
+    command: "whoami",
+    output: (
+      <span>
+        <span className="text-white">Dawit Tsegie</span>
+        <span className="text-neutral-600"> · </span>
+        <span className="text-neutral-400">Full-stack Engineer</span>
+      </span>
+    ),
+  },
+  {
+    prompt: "~/dawit",
+    command: "cat ~/.stack",
+    output: (
+      <div className="space-y-0.5">
+        <div>
+          <span className="text-indigo-300">frontend</span>
+          <span className="text-neutral-600">: </span>
+          <span className="text-neutral-400">
+            TypeScript · React · Next.js · Tailwind
+          </span>
+        </div>
+        <div>
+          <span className="text-indigo-300">backend </span>
+          <span className="text-neutral-600">: </span>
+          <span className="text-neutral-400">
+            Node · Express · PostgreSQL · MongoDB
+          </span>
+        </div>
+        <div>
+          <span className="text-indigo-300">tooling </span>
+          <span className="text-neutral-600">: </span>
+          <span className="text-neutral-400">Docker · Git · Figma</span>
+        </div>
+      </div>
+    ),
+  },
+  {
+    prompt: "~/dawit",
+    command: "git log --oneline -3",
+    output: (
+      <div className="space-y-0.5">
+        <div>
+          <span className="text-amber-300/90">9f3a2c1</span>
+          <span className="ml-2 text-neutral-500">feat(ai):</span>
+          <span className="ml-1.5 text-neutral-400">streaming Gemini chat</span>
+        </div>
+        <div>
+          <span className="text-amber-300/90">8e1b7f4</span>
+          <span className="ml-2 text-neutral-500">perf:</span>
+          <span className="ml-1.5 text-neutral-400">
+            42% LCP reduction via image pipeline
+          </span>
+        </div>
+        <div>
+          <span className="text-amber-300/90">7d2c9a8</span>
+          <span className="ml-2 text-neutral-500">refactor:</span>
+          <span className="ml-1.5 text-neutral-400">
+            PHP monolith → Next.js App Router
+          </span>
+        </div>
+      </div>
+    ),
+  },
+  {
+    prompt: "~/dawit",
+    command: "./availability",
+    output: "● Available for new work — remote-first",
+    tone: "success",
+  },
+];
+
+/* ============================================================
+   Motion variants
+   ============================================================ */
+const containerVariants: Variants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
+};
+
+/* ============================================================
+   Hooks
+   ============================================================ */
+function useTypewriter(enabled: boolean) {
+  const [state, setState] = useState({
+    entryIndex: enabled ? 0 : TERMINAL.length,
+    charIndex: 0,
+    phase: (enabled ? "typing" : "done") as "typing" | "output" | "done",
+  });
 
   useEffect(() => {
-    const start = setTimeout(() => typeLine(0), 800);
-    return () => clearTimeout(start);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const typeLine = (index: number) => {
-    if (index >= terminalLines.length) {
-      setDone(true);
+    if (!enabled || state.phase === "done") return;
+    const entry = TERMINAL[state.entryIndex];
+    if (!entry) {
+      setState((s) => ({ ...s, phase: "done" }));
       return;
     }
-    const line = terminalLines[index];
-
-    if (line.type === "command" && line.command) {
-      let i = 0;
-      const iv = setInterval(() => {
-        if (i <= line.command!.length) {
-          setCurrentText(line.command!.slice(0, i));
-          i++;
+    let timer: ReturnType<typeof setTimeout>;
+    if (state.phase === "typing") {
+      if (state.charIndex < entry.command.length) {
+        timer = setTimeout(
+          () => setState((s) => ({ ...s, charIndex: s.charIndex + 1 })),
+          40
+        );
+      } else {
+        timer = setTimeout(
+          () => setState((s) => ({ ...s, phase: "output" })),
+          220
+        );
+      }
+    } else if (state.phase === "output") {
+      timer = setTimeout(() => {
+        if (state.entryIndex + 1 < TERMINAL.length) {
+          setState((s) => ({
+            entryIndex: s.entryIndex + 1,
+            charIndex: 0,
+            phase: "typing",
+          }));
         } else {
-          clearInterval(iv);
-          setTimeout(() => {
-            setVisibleLines(index + 1);
-            setCurrentText("");
-            typeLine(index + 1);
-          }, 350);
+          setState((s) => ({
+            entryIndex: TERMINAL.length,
+            charIndex: 0,
+            phase: "done",
+          }));
         }
-      }, 55);
-    } else {
-      setTimeout(() => {
-        setVisibleLines(index + 1);
-        typeLine(index + 1);
-      }, 300);
+      }, 380);
     }
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [enabled, state]);
+
+  return state;
+}
+
+/* ============================================================
+   Rotating role — bigger, blinking, unique gradient per role
+   ============================================================ */
+function RotatingRole() {
+  const prefersReduced = useReducedMotion();
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (prefersReduced) return;
+    const id = setInterval(() => setIndex((i) => (i + 1) % ROLES.length), 3600);
+    return () => clearInterval(id);
+  }, [prefersReduced]);
+
+  const role = ROLES[index];
+
+  return (
+    <div className="flex items-center">
+      <AnimatePresence mode="wait">
+        <motion.span
+          key={index}
+          initial={{ opacity: 0, y: 10, filter: "blur(6px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          exit={{ opacity: 0, y: -10, filter: "blur(6px)" }}
+          transition={{ duration: 0.45, ease: EASE }}
+          className={`inline-block whitespace-nowrap bg-gradient-to-r ${role.gradient} bg-clip-text text-2xl font-semibold tracking-tight text-transparent sm:text-3xl lg:text-4xl`}
+        >
+          {role.text}
+        </motion.span>
+      </AnimatePresence>
+
+      {/* Blinking cursor */}
+      <motion.span
+        aria-hidden
+        animate={{ opacity: [1, 0] }}
+        transition={{ duration: 0.9, repeat: Infinity, ease: "linear" }}
+        className="ml-1 inline-block h-6 w-[3px] rounded-sm bg-indigo-400 sm:h-7 lg:h-9"
+      />
+    </div>
+  );
+}
+
+/* ============================================================
+   Magnetic button
+   ============================================================ */
+function MagneticButton({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const prefersReduced = useReducedMotion();
+
+  const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (prefersReduced || !ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    setOffset({
+      x: (e.clientX - rect.left - rect.width / 2) * 0.18,
+      y: (e.clientY - rect.top - rect.height / 2) * 0.18,
+    });
   };
 
   return (
+    <motion.div
+      ref={ref}
+      onMouseMove={onMove}
+      onMouseLeave={() => setOffset({ x: 0, y: 0 })}
+      animate={{ x: offset.x, y: offset.y }}
+      transition={{ type: "spring", stiffness: 260, damping: 18 }}
+      className="inline-block"
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+/* ============================================================
+   Terminal
+   ============================================================ */
+function TerminalRow({
+  entry,
+  command,
+  showOutput,
+}: {
+  entry: TerminalEntry;
+  command: string;
+  showOutput: boolean;
+}) {
+  const isSuccess = entry.tone === "success";
+  return (
+    <div className="mt-3 first:mt-0">
+      <div className="flex items-start gap-2 font-mono text-[13px] leading-relaxed">
+        <span className="shrink-0 text-emerald-400">➜</span>
+        <span className="shrink-0 text-indigo-300">{entry.prompt}</span>
+        <span className="text-white">{command}</span>
+      </div>
+      {showOutput && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.25 }}
+          className={`mt-1 pl-6 font-mono text-[13px] leading-relaxed ${
+            isSuccess ? "text-emerald-400" : ""
+          }`}
+        >
+          {entry.output}
+        </motion.div>
+      )}
+    </div>
+  );
+}
+
+function TerminalWindow() {
+  const prefersReduced = useReducedMotion();
+  const { entryIndex, charIndex, phase } = useTypewriter(!prefersReduced);
+
+  return (
+    <div className="relative">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -inset-4 rounded-3xl bg-indigo-500/[0.08] blur-3xl"
+      />
+      <div className="relative overflow-hidden rounded-xl border border-white/[0.08] bg-[#0a0a12]/95 shadow-2xl">
+        <div className="flex items-center justify-between border-b border-white/[0.06] px-4 py-2.5">
+          <div className="flex items-center gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]/70" />
+            <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]/70" />
+            <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]/70" />
+          </div>
+          <span className="font-mono text-[11px] tracking-wide text-neutral-500">
+            dawit@portfolio — zsh
+          </span>
+          <span className="w-12" />
+        </div>
+        <div className="min-h-[320px] p-5 sm:p-6">
+          {TERMINAL.slice(0, entryIndex).map((entry, i) => (
+            <TerminalRow
+              key={i}
+              entry={entry}
+              command={entry.command}
+              showOutput
+            />
+          ))}
+          {phase !== "done" && TERMINAL[entryIndex] && (
+            <TerminalRow
+              entry={TERMINAL[entryIndex]}
+              command={TERMINAL[entryIndex].command.slice(0, charIndex)}
+              showOutput={phase === "output"}
+            />
+          )}
+          <div className="mt-3 flex items-center gap-2 font-mono text-[13px]">
+            <span className="text-emerald-400">➜</span>
+            <span className="text-indigo-300">~/dawit</span>
+            <motion.span
+              animate={{ opacity: [1, 0] }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+              className="inline-block h-4 w-2 bg-neutral-400"
+              aria-hidden
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
+   Hero
+   ============================================================ */
+export function Hero() {
+  return (
     <section
       id="home"
-      className="pt-32 pb-20 px-6 max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16 min-h-screen relative z-10"
+      className="relative mx-auto flex min-h-screen max-w-7xl flex-col justify-center gap-16 px-6 pb-20 pt-32 lg:flex-row lg:items-center"
     >
-      {/* ===== LEFT CONTENT ===== */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-1/3 -z-10 h-[480px] w-[900px] -translate-x-1/2 rounded-full bg-indigo-500/[0.07] blur-[120px]"
+      />
+
+      {/* ===== LEFT ===== */}
       <motion.div
-        className="flex-1 space-y-6 lg:space-y-8"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
+        className="flex-1 space-y-6"
       >
-        {/* Hello badge */}
-        <motion.div
-          variants={itemVariants}
-          className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-[var(--card)] border border-[var(--border)] shadow-lg shadow-indigo-500/10"
-        >
-          <span className="relative flex h-3 w-3">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-indigo-500"></span>
-          </span>
-          <span className="text-lg font-semibold text-[var(--foreground)] tracking-wide">
-            Hello, I'm
-          </span>
-        </motion.div>
-
-        {/* Animated gradient name */}
+        {/* Name — reduced size */}
         <motion.h1
           variants={itemVariants}
-          className="text-5xl lg:text-7xl font-bold tracking-tight"
+          className="text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl"
         >
-          <span className="bg-gradient-to-r from-white via-indigo-300 to-purple-400 bg-clip-text text-transparent animate-gradient">
+          <span className="bg-gradient-to-br from-white via-neutral-200 to-neutral-500 bg-clip-text text-transparent">
             Dawit Tsegie
           </span>
         </motion.h1>
 
-        {/* Animated role text */}
+        {/* Rotating role — bigger, colorful, blinking */}
         <motion.div variants={itemVariants}>
-          <AnimatedText />
+          <RotatingRole />
         </motion.div>
 
-        {/* Currently working on */}
-        <motion.div
-          variants={itemVariants}
-          className="flex items-center gap-2 text-sm text-gray-400"
-        >
-          <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-          Currently building a Flutter app for local businesses
-        </motion.div>
-
-        {/* Description */}
+        {/* Bio */}
         <motion.p
           variants={itemVariants}
-          className="text-lg text-gray-500 max-w-xl leading-relaxed"
+          className="max-w-lg text-base leading-relaxed text-neutral-400 sm:text-lg"
         >
-          I turn ambitious ideas into thoughtful digital products from the
-          first interface to the last API.
+          Full-stack engineer building production web applications end to end 
+          from data models and APIs to polished interfaces. Currently focused on
+          TypeScript and AI-integrated products.
         </motion.p>
 
-        {/* Buttons */}
+        {/* CTAs */}
         <motion.div
           variants={itemVariants}
-          className="flex flex-wrap items-center gap-4"
+          className="flex flex-wrap items-center gap-3 pt-2"
         >
           <MagneticButton>
-            <button
-              onClick={() => scrollToSection("projects")}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium bg-indigo-600 text-white hover:bg-indigo-700 transition-colors cursor-pointer"
+            <a
+              href="#projects"
+              className="group inline-flex items-center gap-2 rounded-lg bg-white px-5 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-neutral-100"
             >
-              View Projects <ArrowUpRight size={18} />
-            </button>
+              View Work
+              <ArrowUpRight
+                size={16}
+                className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+              />
+            </a>
           </MagneticButton>
 
           <MagneticButton>
             <a
               href="/CV.pdf"
               download="Dawit_Tsegie_CV.pdf"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium bg-[var(--card)] text-white border border-[var(--border)] hover:bg-[var(--background)] transition-colors cursor-pointer"
+              className="group inline-flex items-center gap-2 rounded-lg border border-white/[0.1] bg-white/[0.02] px-5 py-2.5 text-sm font-semibold text-neutral-200 transition-colors hover:border-white/[0.2] hover:bg-white/[0.04] hover:text-white"
             >
-              Download CV <Download size={18} />
+              Résumé
+              <Download
+                size={16}
+                className="transition-transform duration-300 group-hover:translate-y-0.5"
+              />
             </a>
           </MagneticButton>
         </motion.div>
 
-        {/* Social icons */}
+        {/* Socials + location */}
         <motion.div
           variants={itemVariants}
-          className="flex items-center gap-6 pt-4 text-gray-500"
+          className="flex items-center gap-5 pt-4"
         >
           <a
             href="https://github.com/dawit708"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-indigo-400 transition-colors cursor-pointer"
+            aria-label="GitHub"
+            className="text-neutral-500 transition-colors hover:text-white"
           >
-            <FaGithub size={24} />
+            <FaGithub size={18} />
           </a>
-          <a href="#" className="hover:text-indigo-400 transition-colors cursor-pointer">
-            <FaLinkedin size={24} />
+          <a
+            href="#"
+            aria-label="LinkedIn"
+            className="text-neutral-500 transition-colors hover:text-white"
+          >
+            <FaLinkedin size={18} />
           </a>
-          <a href="#" className="hover:text-indigo-400 transition-colors cursor-pointer">
-            <FaTwitter size={24} />
+          <a
+            href="#"
+            aria-label="X / Twitter"
+            className="text-neutral-500 transition-colors hover:text-white"
+          >
+            <FaXTwitter size={18} />
           </a>
-          <a href="#" className="hover:text-indigo-400 transition-colors cursor-pointer">
-            <FaDribbble size={24} />
-          </a>
+          <span className="h-3 w-px bg-white/[0.08]" />
+          <span className="font-mono text-[11px] tracking-wide text-neutral-600">
+            Addis Ababa · Remote-first
+          </span>
         </motion.div>
       </motion.div>
 
-      {/* ===== RIGHT: TERMINAL WINDOW ===== */}
+      {/* ===== RIGHT: Terminal ===== */}
       <motion.div
-        className="flex-1 w-full max-w-xl relative"
-        variants={terminalVariants}
-        initial="hidden"
-        animate="visible"
+        initial={false}
+        animate={{ opacity: 1 }}
+        className="w-full flex-1 lg:max-w-xl"
       >
-        <div className="relative bg-[#0d0d16]/85 backdrop-blur-md border border-[#1f2937] rounded-lg overflow-hidden shadow-2xl shadow-indigo-500/20">
-          {/* Terminal top bar */}
-          <div className="flex items-center px-4 py-3 bg-[#0a0a12]/90 border-b border-[#1f2937]">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-[#ff5f57]" />
-              <div className="w-3 h-3 rounded-full bg-[#febc2e]" />
-              <div className="w-3 h-3 rounded-full bg-[#28c840]" />
-            </div>
-            <div className="flex-1 text-center font-mono text-xs text-gray-400 tracking-wide">
-              dawit@dev: ~/portfolio — zsh
-            </div>
-            <div className="w-14" />
-          </div>
+        <TerminalWindow />
+      </motion.div>
 
-          {/* Terminal body */}
-          <div className="p-5 md:p-6 font-mono text-xs md:text-sm leading-relaxed min-h-[340px]">
-            {terminalLines.slice(0, visibleLines).map((line, i) => (
-              <TerminalLine key={i} line={line} />
-            ))}
-
-            {/* Currently typing */}
-            {!done && visibleLines < terminalLines.length && (
-              <div className="flex items-start gap-2 mt-2">
-                <span className="text-emerald-400 font-bold flex-shrink-0">➜</span>
-                <span className="text-cyan-400 font-bold flex-shrink-0">~</span>
-                <span className="text-white">
-                  {currentText}
-                  <motion.span
-                    animate={{ opacity: [1, 0, 1] }}
-                    transition={{ duration: 1, repeat: Infinity }}
-                    className="inline-block w-2 h-4 bg-amber-300 ml-0.5 align-middle"
-                  />
-                </span>
-              </div>
-            )}
-
-            {/* Final blinking cursor */}
-            {done && (
-              <div className="flex items-start gap-2 mt-2">
-                <span className="text-emerald-400 font-bold flex-shrink-0">➜</span>
-                <span className="text-cyan-400 font-bold flex-shrink-0">~</span>
-                <motion.span
-                  animate={{ opacity: [1, 0, 1] }}
-                  transition={{ duration: 1.2, repeat: Infinity }}
-                  className="inline-block w-2 h-4 bg-amber-300 ml-0.5"
-                />
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Tagline below terminal */}
+      {/* Scroll hint */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2, duration: 1 }}
+        className="pointer-events-none absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 lg:flex"
+      >
+        <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-neutral-600">
+          Scroll
+        </span>
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1.5 }}
-          className="text-center mt-4 font-mono text-[10px] md:text-xs text-gray-500 tracking-[0.3em] uppercase"
+          animate={{ y: [0, 6, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         >
-          live shell — types on load, blinks forever
+          <ArrowDown size={14} className="text-neutral-600" />
         </motion.div>
       </motion.div>
     </section>
   );
-};
-
-/* ===== Individual terminal line ===== */
-const TerminalLine = ({ line }: { line: TermLine }) => {
-  if (line.type === "command") {
-    return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="flex items-start gap-2 mt-3 first:mt-0"
-      >
-        <span className="text-emerald-400 font-bold flex-shrink-0">➜</span>
-        <span className="text-cyan-400 font-bold flex-shrink-0">~</span>
-        <span className="text-white">{line.command}</span>
-      </motion.div>
-    );
-  }
-
-  if (line.type === "success") {
-    return (
-      <motion.div
-        initial={{ opacity: 0, x: -10 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.3 }}
-        className="flex items-start gap-2 mt-1 pl-6"
-      >
-        <span className="text-emerald-400 font-bold">{line.output}</span>
-      </motion.div>
-    );
-  }
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: -8 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.35 }}
-      className="text-gray-300 mt-1 pl-6 whitespace-pre-wrap"
-    >
-      {line.output}
-    </motion.div>
-  );
-};
+}

@@ -125,8 +125,9 @@ export const Navbar = () => {
                     key={item.label}
                     href={item.id}
                     className="relative px-4 py-2 rounded-lg font-medium text-gray-400 hover:text-[var(--foreground)] transition-all duration-300 group"
+                  
                   >
-                    <span className="relative z-10">{item.label}</span>
+                    <span className="relative z-10">{item.label} </span>
                     <span className="absolute inset-0 rounded-lg bg-indigo-500/0 group-hover:bg-indigo-500/10 transition-all duration-300" />
                   </Link>
                 );
