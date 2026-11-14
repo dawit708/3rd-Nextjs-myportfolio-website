@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   SiReact,
   SiNextdotjs,
@@ -26,216 +26,444 @@ import {
 } from "react-icons/si";
 
 /* ============================================================
-   Data — Grouped to match your image
+   Data
+   Edit `years`, `level` and `note` so they reflect your real
+   experience. These are placeholders.
    ============================================================ */
+type Level = "Expert" | "Advanced" | "Working";
+
 type Tech = {
   name: string;
   icon: React.ReactNode;
   color: string;
+  years: number;
+  level: Level;
+  note: string;
 };
 
 type Category = {
   id: string;
   title: string;
+  description: string;
   techs: Tech[];
+};
+
+const LEVEL_SEGMENTS: Record<Level, number> = {
+  Expert: 3,
+  Advanced: 2,
+  Working: 1,
 };
 
 const CATEGORIES: Category[] = [
   {
     id: "frontend",
-    title: "Frontend Development",
+    title: "Frontend",
+    description: "Interfaces, design systems and client-side performance.",
     techs: [
-      { name: "React", icon: <SiReact />, color: "#61DAFB" },
-      { name: "Next.js", icon: <SiNextdotjs />, color: "#FFFFFF" },
-      { name: "TypeScript", icon: <SiTypescript />, color: "#3178C6" },
-      { name: "Tailwind", icon: <SiTailwindcss />, color: "#06B6D4" },
-      { name: "JavaScript", icon: <SiJavascript />, color: "#F7DF1E" },
-      { name: "HTML5", icon: <SiHtml5 />, color: "#E34F26" },
-      { name: "CSS3", icon: <SiCss />, color: "#1572B6" },
+      {
+        name: "React",
+        icon: <SiReact />,
+        color: "#61DAFB",
+        years: 4,
+        level: "Expert",
+        note: "Component architecture, custom hooks, state management and performance tuning.",
+      },
+      {
+        name: "Next.js",
+        icon: <SiNextdotjs />,
+        color: "#FFFFFF",
+        years: 3,
+        level: "Expert",
+        note: "App Router, server components, SSR/ISR, route handlers and SEO.",
+      },
+      {
+        name: "TypeScript",
+        icon: <SiTypescript />,
+        color: "#3178C6",
+        years: 3,
+        level: "Advanced",
+        note: "Strict typing, generics and shared types between client and API.",
+      },
+      {
+        name: "Tailwind CSS",
+        icon: <SiTailwindcss />,
+        color: "#06B6D4",
+        years: 3,
+        level: "Expert",
+        note: "Design tokens, responsive layouts and reusable UI primitives.",
+      },
+      {
+        name: "JavaScript",
+        icon: <SiJavascript />,
+        color: "#F7DF1E",
+        years: 5,
+        level: "Expert",
+        note: "Modern ES features, async patterns and browser APIs.",
+      },
+      {
+        name: "HTML5",
+        icon: <SiHtml5 />,
+        color: "#E34F26",
+        years: 5,
+        level: "Expert",
+        note: "Semantic, accessible markup.",
+      },
+      {
+        name: "CSS3",
+        icon: <SiCss />,
+        color: "#1572B6",
+        years: 5,
+        level: "Advanced",
+        note: "Grid, flexbox, animations and custom properties.",
+      },
     ],
   },
   {
     id: "backend",
-    title: "Backend & APIs",
+    title: "Backend & Data",
+    description: "APIs, databases and the services behind the UI.",
     techs: [
-      { name: "Node.js", icon: <SiNodedotjs />, color: "#339933" },
-      { name: "Express", icon: <SiExpress />, color: "#FFFFFF" },
-      { name: "FastAPI", icon: <SiFastapi />, color: "#009688" },
-      { name: "PostgreSQL", icon: <SiPostgresql />, color: "#4169E1" },
-      { name: "MongoDB", icon: <SiMongodb />, color: "#47A248" },
-      { name: "Python", icon: <SiPython />, color: "#3776AB" },
-      { name: "PHP", icon: <SiPhp />, color: "#777BB4" },
+      {
+        name: "Node.js",
+        icon: <SiNodedotjs />,
+        color: "#339933",
+        years: 4,
+        level: "Advanced",
+        note: "REST APIs, authentication, background jobs and integrations.",
+      },
+      {
+        name: "Express",
+        icon: <SiExpress />,
+        color: "#FFFFFF",
+        years: 3,
+        level: "Advanced",
+        note: "Middleware design, validation and error handling.",
+      },
+      {
+        name: "FastAPI",
+        icon: <SiFastapi />,
+        color: "#009688",
+        years: 2,
+        level: "Advanced",
+        note: "Typed Python APIs with automatic OpenAPI docs.",
+      },
+      {
+        name: "PostgreSQL",
+        icon: <SiPostgresql />,
+        color: "#4169E1",
+        years: 3,
+        level: "Advanced",
+        note: "Schema design, indexing and query optimization.",
+      },
+      {
+        name: "MongoDB",
+        icon: <SiMongodb />,
+        color: "#47A248",
+        years: 3,
+        level: "Advanced",
+        note: "Document modelling and aggregation pipelines.",
+      },
+      {
+        name: "Python",
+        icon: <SiPython />,
+        color: "#3776AB",
+        years: 3,
+        level: "Advanced",
+        note: "Services, scripting and data work.",
+      },
+      {
+        name: "PHP",
+        icon: <SiPhp />,
+        color: "#777BB4",
+        years: 2,
+        level: "Working",
+        note: "Maintaining and extending existing PHP applications.",
+      },
     ],
   },
   {
     id: "tools",
-    title: "DevOps & Tools",
+    title: "Tooling & Mobile",
+    description: "Workflow, delivery, design handoff and cross-platform work.",
     techs: [
-      { name: "Docker", icon: <SiDocker />, color: "#2496ED" },
-      { name: "Git", icon: <SiGit />, color: "#F05032" },
-      { name: "GitHub", icon: <SiGithub />, color: "#FFFFFF" },
-      { name: "Figma", icon: <SiFigma />, color: "#F24E1E" },
-      { name: "Flutter", icon: <SiFlutter />, color: "#02569B" },
-      { name: "TensorFlow", icon: <SiTensorflow />, color: "#FF6F00" },
+      {
+        name: "Docker",
+        icon: <SiDocker />,
+        color: "#2496ED",
+        years: 2,
+        level: "Advanced",
+        note: "Containerized dev environments and production images.",
+      },
+      {
+        name: "Git",
+        icon: <SiGit />,
+        color: "#F05032",
+        years: 5,
+        level: "Expert",
+        note: "Branching strategies, rebasing and clean commit history.",
+      },
+      {
+        name: "GitHub",
+        icon: <SiGithub />,
+        color: "#FFFFFF",
+        years: 5,
+        level: "Expert",
+        note: "Pull request reviews, Actions CI/CD and project boards.",
+      },
+      {
+        name: "Figma",
+        icon: <SiFigma />,
+        color: "#F24E1E",
+        years: 3,
+        level: "Advanced",
+        note: "Turning designs into components and collaborating with designers.",
+      },
+      {
+        name: "Flutter",
+        icon: <SiFlutter />,
+        color: "#02569B",
+        years: 2,
+        level: "Working",
+        note: "Cross-platform mobile apps from a single codebase.",
+      },
+      {
+        name: "TensorFlow",
+        icon: <SiTensorflow />,
+        color: "#FF6F00",
+        years: 1,
+        level: "Working",
+        note: "Training and serving small machine learning models.",
+      },
     ],
   },
 ];
 
 /* ============================================================
-   Diamond Card Component
+   Level indicator (3 segments)
    ============================================================ */
-function DiamondCard({
-  tech,
-  isActive,
-  onClick,
-}: {
-  tech: Tech;
-  isActive: boolean;
-  onClick: () => void;
-}) {
+function LevelMeter({ level, color }: { level: Level; color: string }) {
+  const filled = LEVEL_SEGMENTS[level];
   return (
-    <motion.button
-      onClick={onClick}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      className="group relative flex h-24 w-24 sm:h-28 sm:w-28 items-center justify-center outline-none"
-    >
-      {/* 
-        The Rotated Background. 
-        We use `rotate-45` to make it a diamond. 
-      */}
-      <div
-        className={`absolute inset-2 rotate-45 rounded-2xl border-2 transition-all duration-300 ${
-          isActive
-            ? "border-[var(--tech-color)] bg-[var(--tech-color)]/10 shadow-[0_0_20px_var(--tech-color)]"
-            : "border-white/[0.06] bg-[#0f0f13] group-hover:border-white/[0.15] group-hover:bg-[#15151a]"
-        }`}
-        style={{ "--tech-color": tech.color } as React.CSSProperties}
-      />
-
-      {/* 
-        Circular Glow effect when clicked (The "Circulated" effect you asked for)
-      */}
-      <AnimatePresence>
-        {isActive && (
-          <motion.div
-            initial={{ scale: 0.5, opacity: 0 }}
-            animate={{ scale: 1.2, opacity: 1 }}
-            exit={{ scale: 0.5, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="pointer-events-none absolute inset-0 rounded-full bg-[var(--tech-color)] opacity-20 blur-xl"
-            style={{ "--tech-color": tech.color } as React.CSSProperties}
+    <div className="flex items-center gap-3">
+      <div className="flex gap-1" aria-hidden>
+        {[0, 1, 2].map((i) => (
+          <span
+            key={i}
+            className="h-1 w-5 rounded-full"
+            style={{
+              backgroundColor: i < filled ? color : "rgba(255,255,255,0.1)",
+            }}
           />
-        )}
-      </AnimatePresence>
-
-      {/* 
-        The Content (Upright). 
-        Because the background is rotated 45deg, the text stays at 0deg.
-      */}
-      <div className="relative z-10 flex flex-col items-center gap-1.5">
-        <div
-          className={`text-2xl sm:text-3xl transition-colors duration-300 ${
-            isActive ? "text-white drop-shadow-md" : "text-neutral-400"
-          }`}
-          style={isActive ? { color: tech.color } : {}}
-        >
-          {tech.icon}
-        </div>
-        <span
-          className={`text-[10px] sm:text-xs font-semibold tracking-wide transition-colors duration-300 ${
-            isActive ? "text-white" : "text-neutral-500 group-hover:text-neutral-300"
-          }`}
-        >
-          {tech.name}
-        </span>
+        ))}
       </div>
-    </motion.button>
+      <span className="w-[4.5rem] text-xs text-neutral-400">{level}</span>
+    </div>
   );
 }
 
 /* ============================================================
-   Main Section
+   Row
+   ============================================================ */
+function TechRow({
+  tech,
+  isActive,
+  onToggle,
+  reduceMotion,
+}: {
+  tech: Tech;
+  isActive: boolean;
+  onToggle: () => void;
+  reduceMotion: boolean;
+}) {
+  return (
+    <li
+      className="relative transition-colors duration-200 hover:bg-white/[0.025]"
+      style={
+        isActive
+          ? {
+              backgroundColor: `color-mix(in srgb, ${tech.color} 7%, transparent)`,
+            }
+          : undefined
+      }
+    >
+      {/* Active marker */}
+      <span
+        aria-hidden
+        className="absolute inset-y-0 left-0 w-0.5 transition-opacity duration-200"
+        style={{ backgroundColor: tech.color, opacity: isActive ? 1 : 0 }}
+      />
+
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={isActive}
+        className="flex w-full items-center gap-4 px-4 py-4 text-left outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-indigo-400/70 sm:px-5"
+      >
+        {/* Icon tile */}
+        <span
+          aria-hidden
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-white/[0.08] bg-white/[0.03] text-xl transition-colors duration-200"
+          style={{ color: isActive ? tech.color : "#a3a3a3" }}
+        >
+          {tech.icon}
+        </span>
+
+        {/* Name */}
+        <span
+          className={`flex-1 text-[15px] font-medium transition-colors duration-200 ${
+            isActive ? "text-white" : "text-neutral-300"
+          }`}
+        >
+          {tech.name}
+        </span>
+
+        {/* Years */}
+        <span className="w-14 text-right text-sm tabular-nums text-neutral-400">
+          {tech.years} {tech.years === 1 ? "yr" : "yrs"}
+        </span>
+
+        {/* Level (hidden on small screens) */}
+        <span className="hidden sm:block">
+          <LevelMeter level={tech.level} color={tech.color} />
+        </span>
+      </button>
+
+      {/* Details — expands in response to the click */}
+      <AnimatePresence initial={false}>
+        {isActive && (
+          <motion.div
+            initial={reduceMotion ? false : { height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={reduceMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
+            transition={{ duration: reduceMotion ? 0 : 0.22, ease: "easeOut" }}
+            className="overflow-hidden"
+          >
+            <div className="pb-5 pl-[4.5rem] pr-5 sm:pl-[4.75rem]">
+              <p className="max-w-md text-sm leading-relaxed text-neutral-400">
+                {tech.note}
+              </p>
+              <div className="mt-3 sm:hidden">
+                <LevelMeter level={tech.level} color={tech.color} />
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </li>
+  );
+}
+
+/* ============================================================
+   Section
    ============================================================ */
 export function TechStack() {
-  const [activeTech, setActiveTech] = useState<string | null>("TypeScript");
+  const reduceMotion = useReducedMotion() ?? false;
+  const [activeCategory, setActiveCategory] = useState<string>(
+    CATEGORIES[0].id
+  );
+  const [activeTech, setActiveTech] = useState<string | null>(
+    CATEGORIES[0].techs[0].name
+  );
+
+  const category =
+    CATEGORIES.find((c) => c.id === activeCategory) ?? CATEGORIES[0];
+
+  const selectCategory = (id: string) => {
+    const next = CATEGORIES.find((c) => c.id === id);
+    setActiveCategory(id);
+    setActiveTech(next ? next.techs[0].name : null);
+  };
 
   return (
     <section
       id="stack"
-      className="relative mx-auto max-w-7xl scroll-mt-24 px-6 py-24 sm:py-32"
+      className="relative mx-auto max-w-6xl scroll-mt-24 px-6 py-24 sm:py-32"
     >
-      {/* Background Glow */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[500px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-indigo-500/[0.03] blur-[120px]"
-      />
+      <div className="grid gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+        {/* Left: heading + category tabs */}
+        <div className="lg:sticky lg:top-28 lg:self-start">
+          <h2 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+            Tech stack
+          </h2>
+          <p className="mt-4 max-w-md text-base leading-relaxed text-neutral-400">
+            The languages, frameworks and tools I use to design, build and ship
+            production software.
+          </p>
 
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="mx-auto mb-16 max-w-2xl text-center"
-      >
-        <div className="mb-5 inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-indigo-400">
-          <span className="h-px w-8 bg-indigo-400/50" />
-          My Toolkit
-          <span className="h-px w-8 bg-indigo-400/50" />
-        </div>
-        <h2 className="mb-5 text-4xl font-semibold tracking-tight sm:text-5xl md:text-6xl">
-          <span className="bg-gradient-to-br from-white via-neutral-200 to-neutral-500 bg-clip-text text-transparent">
-            Tech Stack
-          </span>
-        </h2>
-        <p className="text-base leading-relaxed text-neutral-400 sm:text-lg">
-          Click on any technology to highlight it.
-        </p>
-      </motion.div>
-
-      {/* 3-Column Grid Layout */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 lg:gap-8">
-        {CATEGORIES.map((category, colIndex) => (
-          <motion.div
-            key={category.id}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.5, delay: colIndex * 0.15 }}
-            className="relative flex flex-col rounded-3xl border border-white/[0.06] bg-[#09090b] p-6 shadow-2xl sm:p-8"
+          <div
+            role="tablist"
+            aria-label="Technology categories"
+            className="-mx-6 mt-10 flex gap-2 overflow-x-auto px-6 pb-2 lg:mx-0 lg:flex-col lg:overflow-visible lg:px-0 lg:pb-0"
           >
-            {/* Column Header */}
-            <h3 className="mb-8 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-              {category.title}
-            </h3>
+            {CATEGORIES.map((c) => {
+              const isCurrent = c.id === activeCategory;
+              return (
+                <button
+                  key={c.id}
+                  role="tab"
+                  id={`tab-${c.id}`}
+                  aria-selected={isCurrent}
+                  aria-controls={`panel-${c.id}`}
+                  onClick={() => selectCategory(c.id)}
+                  className={`shrink-0 rounded-xl border px-4 py-3 text-left outline-none transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-indigo-400/70 lg:w-full ${
+                    isCurrent
+                      ? "border-white/[0.12] bg-white/[0.05]"
+                      : "border-transparent hover:bg-white/[0.03]"
+                  }`}
+                >
+                  <span className="flex items-baseline justify-between gap-6">
+                    <span
+                      className={`text-[15px] font-medium ${
+                        isCurrent ? "text-white" : "text-neutral-400"
+                      }`}
+                    >
+                      {c.title}
+                    </span>
+                    <span className="text-sm tabular-nums text-neutral-500">
+                      {c.techs.length}
+                    </span>
+                  </span>
+                  <span className="mt-1 hidden text-sm leading-snug text-neutral-500 lg:block">
+                    {c.description}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
-            {/* Diamond Grid (Staggered Layout) */}
-            <div className="flex flex-1 flex-wrap justify-center gap-x-2 gap-y-6 sm:gap-x-4 sm:gap-y-8">
-              {category.techs.map((tech, i) => {
-                // Stagger every second item to create the zig-zag diamond look
-                const isStaggered = i % 2 !== 0;
-
-                return (
-                  <div
-                    key={tech.name}
-                    className={`${isStaggered ? "translate-y-6 sm:translate-y-8" : ""}`}
-                  >
-                    <DiamondCard
-                      tech={tech}
-                      isActive={activeTech === tech.name}
-                      onClick={() =>
-                        setActiveTech((prev) =>
-                          prev === tech.name ? null : tech.name
-                        )
-                      }
-                    />
-                  </div>
-                );
-              })}
-            </div>
-          </motion.div>
-        ))}
+        {/* Right: technology list */}
+        <div
+          role="tabpanel"
+          id={`panel-${category.id}`}
+          aria-labelledby={`tab-${category.id}`}
+          className="overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.015]"
+        >
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.ul
+              key={category.id}
+              initial={reduceMotion ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={reduceMotion ? { opacity: 0 } : { opacity: 0 }}
+              transition={{ duration: reduceMotion ? 0 : 0.15 }}
+              className="divide-y divide-white/[0.06]"
+            >
+              {category.techs.map((tech) => (
+                <TechRow
+                  key={tech.name}
+                  tech={tech}
+                  isActive={activeTech === tech.name}
+                  reduceMotion={reduceMotion}
+                  onToggle={() =>
+                    setActiveTech((prev) =>
+                      prev === tech.name ? null : tech.name
+                    )
+                  }
+                />
+              ))}
+            </motion.ul>
+          </AnimatePresence>
+        </div>
       </div>
     </section>
   );
