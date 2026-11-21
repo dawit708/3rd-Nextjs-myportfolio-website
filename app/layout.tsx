@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     title: "Dawit Tsegei | Full-Stack Developer",
     description:
       "Full-stack developer from Addis Ababa, Ethiopia. React, Next.js, TypeScript, MERN.",
-    images: ["/about.jpg"],
+    images: ["/dev.jpg"],
     creator: "@dawit708",
   },
 
