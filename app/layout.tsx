@@ -40,7 +40,7 @@ export const metadata: Metadata = {
       "Full-stack developer building production-ready web applications with React, Next.js, TypeScript, and MERN stack. 12+ live projects.",
     images: [
       {
-        url: "/about.jpg",
+        url: "/dev.jpg",
         width: 1200,
         height: 630,
         alt: "Dawit Tsegei — Full-Stack Developer",
